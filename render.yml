@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: barber-management-shop
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: pip install gunicorn && gunicorn wsgi:application
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: SECRET_KEY
+        value: admin123secretkey
