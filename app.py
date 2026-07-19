@@ -98,6 +98,26 @@ def create_app(config_class=Config):
 
     return app
 
+
+def create_app():
+    app = Flask(__name__)
+    # ... your existing configurations, db.init_app, etc. ...
+
+    # 👇 PASTE THE TEMPORARY ROUTE HERE (INSIDE THE FUNCTION) 👇
+    @app.route('/setup-admin-live-account')
+    def setup_admin_live():
+        from models.user import User
+        existing_admin = User.query.filter_by(email="admin@barber.com").first()
+        if not existing_admin:
+            admin = User(name="Master Admin", email="admin@barber.com", role="Admin")
+            admin.set_password("admin123")
+            db.session.add(admin)
+            db.session.commit()
+            return "Live Production Admin Account Created Successfully!"
+        return "Admin account already exists."
+
+    return app  # This is the existing return line at the bottom of the function
+
 if __name__ == '__main__':
     application = create_app()
     with application.app_context():
