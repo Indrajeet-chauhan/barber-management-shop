@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Customers Directory | BarberOS{% endblock %}
+
+{% block content %}
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+    <div>
+        <h2 class="text-2xl font-bold tracking-tight">Customer Directory</h2>
+        <p class="text-sm text-slate-400 mt-1">Manage client profiles, contact points, and tracking cards.</p>
+    </div>
+    <a href="{{ url_for('customer.add') }}" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold uppercase tracking-wider text-xs px-4 py-3 rounded-xl transition shadow-lg shadow-amber-500/10 shrink-0 text-center">
+        + Register New Client
+    </a>
+</div>
+
+<div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+    {% if customers %}
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-slate-800 bg-slate-950/40 text-slate-400 text-xs font-bold uppercase tracking-wider">
+                    <th class="p-4 font-semibold">Client Name</th>
+                    <th class="p-4 font-semibold">Phone Line</th>
+                    <th class="p-4 font-semibold">Email Address</th>
+                    <th class="p-4 font-semibold text-center">Action shortcuts</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 text-sm">
+                {% for cust in customers %}
+                <tr class="hover:bg-slate-800/20 transition duration-150">
+                    <td class="p-4 font-medium text-slate-200">{{ cust.name }}</td>
+                    <td class="p-4 text-slate-400 font-mono text-xs">{{ cust.phone }}</td>
+                    <td class="p-4 text-slate-400">{{ cust.email or 'N/A' }}</td>
+                    <td class="p-4 text-center">
+                        <form action="{{ url_for('membership.subscribe') }}" method="POST" class="inline-block">
+                            <input type="hidden" name="customer_id" value="{{ cust.id }}">
+                            <input type="hidden" name="tier_id" value="1">
+                            <button type="submit" class="text-xs bg-slate-950 border border-slate-800 hover:border-amber-500/40 text-slate-300 hover:text-amber-500 px-2.5 py-1.5 rounded-lg transition">
+                                Quick VIP Subscribe
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="py-16 text-center bg-slate-950/20">
+        <span class="text-3xl">👥</span>
+        <p class="text-sm text-slate-500 font-medium mt-3">No customer profile tracking records found in the database directory.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

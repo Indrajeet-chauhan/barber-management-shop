@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Inventory Registry | BarberOS{% endblock %}
+
+{% block content %}
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+    <div>
+        <h2 class="text-2xl font-bold tracking-tight">Product Supply & Stock Inventory</h2>
+        <p class="text-sm text-slate-400 mt-1">Monitor product counts, safety stock lines, pricing metrics, and hardware labels.</p>
+    </div>
+    <a href="{{ url_for('inventory.add') }}" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold uppercase tracking-wider text-xs px-4 py-3 rounded-xl transition shadow-lg shadow-amber-500/10 shrink-0 text-center">
+        + Catalog New Product
+    </a>
+</div>
+
+<div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+    {% if products %}
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-slate-800 bg-slate-950/40 text-slate-400 text-xs font-bold uppercase tracking-wider">
+                    <th class="p-4 font-semibold">Product Description</th>
+                    <th class="p-4 font-semibold">Hardware Code</th>
+                    <th class="p-4 font-semibold text-center">Available Stock</th>
+                    <th class="p-4 font-semibold text-right">Wholesale Cost</th>
+                    <th class="p-4 font-semibold text-right">Retail Price</th>
+                    <th class="p-4 font-semibold text-center">Operational Adjustments</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 text-sm">
+                {% for prod in products %}
+                <tr class="hover:bg-slate-800/20 transition duration-150 {% if prod.stock <= prod.min_stock %}bg-red-500/5{% endif %}">
+                    <td class="p-4">
+                        <div class="font-bold text-slate-150">{{ prod.name }}</div>
+                        <span class="bg-slate-950 text-slate-400 text-[10px] font-bold uppercase px-2 py-0.5 rounded border border-slate-800 mt-1 inline-block">
+                            {{ prod.category }}
+                        </span>
+                    </td>
+                    <td class="p-4 text-slate-300 font-mono text-xs">{{ prod.barcode_code or 'No UPC Linked' }}</td>
+                    <td class="p-4 text-center">
+                        <div class="font-bold {% if prod.stock <= prod.min_stock %}text-red-400{% else %}text-emerald-400{% endif %}">
+                            {{ prod.stock }} units
+                        </div>
+                        <span class="text-[11px] text-slate-500">Min Threshold: {{ prod.min_stock }}</span>
+                    </td>
+                    <td class="p-4 text-right text-slate-400 font-mono">${{ "%.2f"|format(prod.purchase_price) }}</td>
+                    <td class="p-4 text-right text-amber-500 font-mono font-bold">${{ "%.2f"|format(prod.selling_price) }}</td>
+                    <td class="p-4">
+                        <div class="flex items-center justify-center gap-3">
+                            <!-- Quick Restock Shift Form Allocation -->
+                            <form action="{{ url_for('inventory.restock', id=prod.id) }}" method="POST" class="flex items-center bg-slate-950 border border-slate-800 rounded-lg overflow-hidden p-1 max-w-[130px]">
+                                <input type="number" name="quantity" required placeholder="Qty" min="1" 
+                                       class="w-12 bg-transparent text-center text-xs text-slate-200 focus:outline-none placeholder-slate-700">
+                                <button type="submit" class="bg-slate-800 hover:bg-slate-700 text-[10px] font-bold text-slate-300 uppercase px-2 py-1 rounded">
+                                    +
+                                </button>
+                            </form>
+
+                            <!-- Hardware Scanning Asset Transformation Trigger -->
+                            {% if prod.barcode_code %}
+                            <form action="{{ url_for('inventory.generate_barcode', id=prod.id) }}" method="POST" class="inline-block">
+                                <button type="submit" title="Generate physical barcode asset image" 
+                                        class="text-xs bg-slate-950 border border-slate-800 hover:border-amber-500/40 text-slate-400 hover:text-amber-500 px-2.5 py-2 rounded-lg transition font-medium">
+                                    🖨️ Barcode
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="py-16 text-center bg-slate-950/20">
+        <span class="text-2xl">📦</span>
+        <p class="text-sm text-slate-500 font-medium mt-3">No product items or stock tracking variants found in warehouse listings.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

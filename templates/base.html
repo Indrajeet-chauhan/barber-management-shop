@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BarberOS Dashboard{% endblock %}</title>
+    <!-- Tailwind CSS Dynamic Play CDN Hook -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        barberGold: '#D97706',
+                        barberDark: '#1E293B'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex font-sans">
+
+    <!-- Primary Vertical Sidebar Navigation Bar -->
+    <aside class="w-64 bg-slate-950 border-r border-slate-800 flex flex-col justify-between shrink-0">
+        <div class="p-6">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="h-8 w-2 bg-barberGold rounded-full"></div>
+                <h1 class="text-xl font-bold tracking-wider uppercase text-amber-500">BarberOS</h1>
+            </div>
+            
+            <nav class="space-y-1">
+                <a href="{{ url_for('dashboard.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">
+                    <span>📊</span> Dashboard
+                </a>
+                <a href="{{ url_for('customer.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">
+                    <span>👥</span> Customers
+                </a>
+                <a href="{{ url_for('appointment.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">
+                    <span>📅</span> Appointments
+                </a>
+                <a href="{{ url_for('employee.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">
+                    <span>💈</span> Staff Members
+                </a>
+                <a href="{{ url_for('inventory.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">
+                    <span>📦</span> Product Stock
+                </a>
+                <a href="{{ url_for('billing.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">
+                    <span>🧾</span> Invoices Ledger
+                </a>
+                <a href="{{ url_for('reports.analytics') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 transition">
+                    <span>📈</span> BI Analytics
+                </a>
+            </nav>
+        </div>
+
+        <!-- Footnote Exit Utilities Area -->
+        <div class="p-6 border-t border-slate-800">
+            {% if current_user.is_authenticated %}
+            <div class="flex items-center justify-between">
+                <div class="truncate mr-2">
+                    <p class="text-sm font-medium text-slate-200 truncate">{{ current_user.name }}</p>
+                    <span class="text-xs text-slate-500 uppercase">{{ current_user.role }}</span>
+                </div>
+                <a href="{{ url_for('auth.logout') }}" class="text-xs text-red-400 hover:underline shrink-0">Log Out</a>
+            </div>
+            {% endif %}
+        </div>
+    </aside>
+
+    <!-- Main Dynamic Content Workspace Block -->
+    <main class="flex-1 flex flex-col min-w-0">
+        <!-- Top Flash Messaging Notifications Hub Banner -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="p-4 space-y-2 bg-slate-950/50 border-b border-slate-800">
+                    {% for category, msg in messages %}
+                        <div class="px-4 py-3 rounded-lg text-sm font-medium {% if category == 'danger' or category == 'error' %}bg-red-500/10 text-red-400 border border-red-500/20{% else %}bg-emerald-500/10 text-emerald-400 border border-emerald-500/20{% endif %}">
+                            {{ msg }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Yield Core Inner Content Views -->
+        <div class="flex-1 p-8 overflow-y-auto">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+</body>
+</html>

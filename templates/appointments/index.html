@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Appointments Queue | BarberOS{% endblock %}
+
+{% block content %}
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+    <div>
+        <h2 class="text-2xl font-bold tracking-tight">Daily Chair Schedule Queue</h2>
+        <p class="text-sm text-slate-400 mt-1">Monitor daily time slot streams, barber assignments, and reservation statuses.</p>
+    </div>
+    <a href="{{ url_for('appointment.book') }}" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold uppercase tracking-wider text-xs px-4 py-3 rounded-xl transition shadow-lg shadow-amber-500/10 shrink-0 text-center">
+        + Reserve Time Slot
+    </a>
+</div>
+
+<div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+    {% if appointments %}
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-slate-800 bg-slate-950/40 text-slate-400 text-xs font-bold uppercase tracking-wider">
+                    <th class="p-4 font-semibold">Scheduled Target Date</th>
+                    <th class="p-4 font-semibold">Time Slot</th>
+                    <th class="p-4 font-semibold">Client Target</th>
+                    <th class="p-4 font-semibold">Assigned Barber</th>
+                    <th class="p-4 font-semibold">Baseline Service</th>
+                    <th class="p-4 font-semibold text-center">Status Flag</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 text-sm">
+                {% for appt in appointments %}
+                <tr class="hover:bg-slate-800/20 transition duration-150">
+                    <td class="p-4 font-medium text-slate-200">{{ appt.date.strftime('%B %d, %Y') }}</td>
+                    <td class="p-4 text-amber-500 font-mono text-xs font-semibold">{{ appt.time.strftime('%I:%M %p') }}</td>
+                    <td class="p-4 text-slate-300 font-medium">{{ appt.customer.name }}</td>
+                    <td class="p-4 text-slate-400">{{ appt.employee.name }}</td>
+                    <td class="p-4">
+                        <span class="bg-slate-950 border border-slate-800 text-slate-300 text-xs font-medium px-2.5 py-1 rounded-md">
+                            {{ appt.service_name }}
+                        </span>
+                    </td>
+                    <td class="p-4 text-center">
+                        <span class="inline-block text-xs font-bold uppercase px-2.5 py-1 rounded-full border bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+                            {{ appt.status }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="py-16 text-center bg-slate-950/20">
+        <span class="text-2xl">📅</span>
+        <p class="text-sm text-slate-500 font-medium mt-3">No active chair reservations or booking records found in system ledger space.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

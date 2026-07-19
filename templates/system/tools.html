@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block title %}System Tools | BarberOS{% endblock %}
+
+{% block content %}
+<!-- Control Center Header Banner Area -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+    <div>
+        <h2 class="text-2xl font-bold tracking-tight">System Maintenance Operations Control Center</h2>
+        <p class="text-sm text-slate-400 mt-1">Execute application backups, data extractions, and administrative optimization pipelines.</p>
+    </div>
+    <div class="bg-slate-950 border border-slate-800 px-4 py-2 rounded-xl text-xs font-mono text-amber-500 shadow-inner">
+        ENGINE_VERSION: v1.4.2-Prod
+    </div>
+</div>
+
+<!-- 2-Column Maintenance Grid Layout Components -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    
+    <!-- Left Panel Card Block: Tabular Spreadsheet Data Extraction Engines -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+        <div>
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-2xl">📥</span>
+                <h3 class="text-lg font-bold tracking-tight">Offsite Tabular Data Backups</h3>
+            </div>
+            <p class="text-xs text-slate-400 mb-6 leading-relaxed">
+                Stream real-time relational row sets directly into standard flat file spreadsheets. These compiled components allow accountants and inventory supervisors to parse long-term shop trends inside Microsoft Excel or Google Sheets.
+            </p>
+            
+            <div class="space-y-3">
+                <div class="p-4 bg-slate-950 border border-slate-800/80 rounded-xl flex items-center justify-between gap-4">
+                    <div>
+                        <h4 class="text-xs font-bold uppercase text-slate-200 tracking-wider">Customer Directory Snapshot</h4>
+                        <p class="text-[11px] text-slate-500 mt-0.5">Includes full contact cards, names, numbers, and profiles.</p>
+                    </div>
+                    <a href="{{ url_for('system.export_customers_csv') }}" 
+                       class="bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/40 text-amber-500 text-xs font-bold tracking-wide uppercase px-3 py-2 rounded-lg transition duration-200 whitespace-nowrap">
+                        Download .CSV
+                    </a>
+                </div>
+
+                <div class="p-4 bg-slate-950 border border-slate-800/80 rounded-xl flex items-center justify-between gap-4">
+                    <div>
+                        <h4 class="text-xs font-bold uppercase text-slate-200 tracking-wider">Commercial Billing Invoices Ledger</h4>
+                        <p class="text-[11px] text-slate-500 mt-0.5">Includes grand financial total streams, tax metrics, and payment channels.</p>
+                    </div>
+                    <a href="{{ url_for('system.export_invoices_csv') }}" 
+                       class="bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/40 text-amber-500 text-xs font-bold tracking-wide uppercase px-3 py-2 rounded-lg transition duration-200 whitespace-nowrap">
+                        Download .CSV
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-6 pt-4 border-t border-slate-800/60 text-[11px] text-slate-500">
+            * Note: CSV file compilation runs inside local server memory nodes, causing zero data lock interference.
+        </div>
+    </div>
+
+    <!-- Right Panel Card Block: Hardware Scanner Utilities & System Diagnostics Links -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+        <div>
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-2xl">⚡</span>
+                <h3 class="text-lg font-bold tracking-tight">System Infrastructure Diagnostics</h3>
+            </div>
+            <p class="text-xs text-slate-400 mb-6 leading-relaxed">
+                Review decoupled module alignments, clean temporary cache maps generated during automated graphic rendering transformations, and track network metrics.
+            </p>
+            
+            <div class="space-y-4">
+                <div class="bg-slate-950 border border-slate-800/60 rounded-xl p-4 flex items-center justify-between text-xs font-semibold">
+                    <span class="text-slate-400">Relational Database Engine:</span>
+                    <span class="text-emerald-400 font-mono">SQLite-In-Memory-Safe</span>
+                </div>
+
+                <div class="bg-slate-950 border border-slate-800/60 rounded-xl p-4 flex items-center justify-between text-xs font-semibold">
+                    <span class="text-slate-400">Imaging Library Core:</span>
+                    <span class="text-slate-300 font-mono">Pillow (PIL Fork) Active</span>
+                </div>
+
+                <div class="bg-slate-950 border border-slate-800/60 rounded-xl p-4 flex items-center justify-between text-xs font-semibold">
+                    <span class="text-slate-400">Encrypted Security Pass Layer:</span>
+                    <span class="text-slate-300 font-mono">Werkzeug Salted Hashes</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-amber-500/5 border border-amber-500/20 rounded-xl p-4 text-xs text-slate-400 leading-normal mt-6">
+            <span class="text-amber-500 font-bold block uppercase tracking-wider text-[10px] mb-1">Administrative Alert Notice</span>
+            Database records update automatically upon checkout actions. Ensure your network gateway remains encrypted before running long-term offsite downloads.
+        </div>
+    </div>
+
+</div>
+{% endblock %}

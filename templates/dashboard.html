@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard | BarberOS{% endblock %}
+
+{% block content %}
+<!-- Welcome Dashboard Header Area -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+    <div>
+        <h2 class="text-2xl font-bold tracking-tight">Management Operations Control</h2>
+        <p class="text-sm text-slate-400 mt-1">Real-time shop workspace performance summary metrics.</p>
+    </div>
+    <div class="bg-slate-950 border border-slate-800 px-4 py-2 rounded-xl text-xs font-semibold text-amber-500 tracking-wider uppercase shadow-inner">
+        System Status: Operational
+    </div>
+</div>
+
+<!-- 4-Column Executive Summary KPI Blocks Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    
+    <!-- Today's Checked-in Volume Card -->
+    <div class="bg-slate-900 border border-slate-800/80 rounded-2xl p-6 shadow-xl relative overflow-hidden group hover:border-slate-700/80 transition duration-300">
+        <div class="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
+        <p class="text-xs font-bold uppercase text-slate-400 tracking-wider">Appointments Booked</p>
+        <div class="flex items-baseline gap-2 mt-2">
+            <span class="text-3xl font-extrabold text-slate-150 tracking-tight">{{ appt_count | default(0) }}</span>
+            <span class="text-xs text-slate-500 font-medium">today</span>
+        </div>
+    </div>
+
+    <!-- Active Client Profiles Total Base -->
+    <div class="bg-slate-900 border border-slate-800/80 rounded-2xl p-6 shadow-xl relative overflow-hidden group hover:border-slate-700/80 transition duration-300">
+        <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+        <p class="text-xs font-bold uppercase text-slate-400 tracking-wider">Registered Clients</p>
+        <div class="flex items-baseline gap-2 mt-2">
+            <span class="text-3xl font-extrabold text-slate-150 tracking-tight">{{ customer_count | default(0) }}</span>
+            <span class="text-xs text-slate-500 font-medium">profiles</span>
+        </div>
+    </div>
+
+    <!-- Staff Roster Allocation Matrix Balance -->
+    <div class="bg-slate-900 border border-slate-800/80 rounded-2xl p-6 shadow-xl relative overflow-hidden group hover:border-slate-700/80 transition duration-300">
+        <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
+        <p class="text-xs font-bold uppercase text-slate-400 tracking-wider">Active Staff</p>
+        <div class="flex items-baseline gap-2 mt-2">
+            <span class="text-3xl font-extrabold text-slate-150 tracking-tight">{{ staff_count | default(0) }}</span>
+            <span class="text-xs text-slate-500 font-medium">on roster</span>
+        </div>
+    </div>
+
+    <!-- Critical Low Stock Registry Counter Indicator -->
+    <div class="bg-slate-900 border border-slate-800/80 rounded-2xl p-6 shadow-xl relative overflow-hidden group hover:border-slate-700/80 transition duration-300">
+        <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
+        <p class="text-xs font-bold uppercase text-slate-400 tracking-wider">Low Stock items</p>
+        <div class="flex items-baseline gap-2 mt-2">
+            <span class="text-3xl font-extrabold text-slate-150 tracking-tight text-red-400">{{ stock_alerts | default(0) }}</span>
+            <span class="text-xs text-slate-500 font-medium">warnings</span>
+        </div>
+    </div>
+
+</div>
+
+<!-- Split Sub-Panels View Blueprint Workspace Block Area -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <!-- Left Split Column Side: Live Active Daily Chair Schedule Timeline -->
+    <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+        <div>
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-bold tracking-tight">Daily Chair Schedule Queue</h3>
+                <a href="{{ url_for('appointment.book') }}" class="text-xs font-bold bg-slate-950 border border-slate-800 hover:border-amber-500/50 hover:bg-slate-800 text-amber-500 px-3 py-2 rounded-xl transition duration-200">
+                    + Book Appointment
+                </a>
+            </div>
+
+            {% if recent_appointments %}
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-800 text-slate-400 text-xs font-bold uppercase tracking-wider">
+                            <th class="pb-3 font-semibold">Client</th>
+                            <th class="pb-3 font-semibold">Assigned Barber</th>
+                            <th class="pb-3 font-semibold">Service Name</th>
+                            <th class="pb-3 font-semibold text-right">Time Slot</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/60 text-sm">
+                        {% for appt in recent_appointments %}
+                        <tr class="hover:bg-slate-800/20 transition duration-150">
+                            <td class="py-3.5 font-medium text-slate-200">{{ appt.customer.name }}</td>
+                            <td class="py-3.5 text-slate-400">{{ appt.employee.name }}</td>
+                            <td class="py-3.5">
+                                <span class="bg-slate-950 border border-slate-800 text-slate-300 text-xs font-medium px-2.5 py-1 rounded-md">
+                                    {{ appt.service_name }}
+                                </span>
+                            </td>
+                            <td class="py-3.5 text-right font-mono text-xs text-amber-500 font-semibold">{{ appt.time.strftime('%I:%M %p') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="py-12 text-center border border-dashed border-slate-800 rounded-xl bg-slate-950/30">
+                <span class="text-2xl">📅</span>
+                <p class="text-sm text-slate-500 font-medium mt-2">No dynamic active bookings registered on today's chair logs.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Right Split Column Side: Critical Operational Action Alerts Center Banner Panel -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+        <div>
+            <h3 class="text-lg font-bold tracking-tight mb-6">Critical Actions Center</h3>
+            
+            <div class="space-y-4">
+                {% if stock_alerts and stock_alerts > 0 %}
+                <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex gap-3">
+                    <span class="text-lg shrink-0 mt-0.5">⚠️</span>
+                    <div>
+                        <h4 class="text-sm font-bold text-red-400">Inventory Supply Warnings</h4>
+                        <p class="text-xs text-slate-400 mt-1">Some products have dropped below their minimum thresholds. Review stock immediately.</p>
+                        <a href="{{ url_for('inventory.index') }}" class="inline-block text-xs font-semibold text-red-400 underline hover:text-red-300 mt-2">View Missing Stock</a>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 flex gap-3">
+                    <span class="text-lg shrink-0 mt-0.5">💡</span>
+                    <div>
+                        <h4 class="text-sm font-bold text-slate-200">System Optimization Tip</h4>
+                        <p class="text-xs text-slate-400 mt-1">To maintain rapid data streaming speeds, execute an encrypted database security snapshot from the maintenance center.</p>
+                        <a href="{{ url_for('system.index') }}" class="inline-block text-xs font-semibold text-amber-500 underline hover:text-amber-400 mt-2">Go to System Tools</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

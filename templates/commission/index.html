@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block title %}Commissions Board | BarberOS{% endblock %}
+
+{% block content %}
+<!-- Page Header Panel Area -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+    <div>
+        <h2 class="text-2xl font-bold tracking-tight">Staff Split Commission Ledgers</h2>
+        <p class="text-sm text-slate-400 mt-1">Audit individual performance cuts, net service sales collection, and payroll calculations.</p>
+    </div>
+    
+    <!-- Top Summary Banner: Aggregates total pending payouts calculated across views -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl px-5 py-3 shadow-xl relative overflow-hidden flex items-center gap-4 min-w-[220px]">
+        <div class="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
+        <div>
+            <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Total Pending Balance</p>
+            <div class="font-mono text-xl font-extrabold text-amber-500 mt-0.5">${{ "%.2f"|format(total_unpaid | default(0.0)) }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <!-- Left Layout Panel: Historical Splits Registry Table (Spans 2 Columns) -->
+    <div class="lg:col-span-2 space-y-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+            {% if entries %}
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-800 bg-slate-950/40 text-slate-400 text-xs font-bold uppercase tracking-wider">
+                            <th class="p-4 font-semibold">Staff Member</th>
+                            <th class="p-4 font-semibold">Line Source</th>
+                            <th class="p-4 font-semibold text-right">Net Collection</th>
+                            <th class="p-4 font-semibold text-center">Applied Rate</th>
+                            <th class="p-4 font-semibold text-right">Calculated Payout</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/60 text-sm">
+                        {% for entry in entries %}
+                        <tr class="hover:bg-slate-800/20 transition duration-150">
+                            <td class="p-4">
+                                <div class="font-bold text-slate-100">{{ entry.employee.name }}</div>
+                                <span class="text-[10px] text-slate-500 font-mono">Log ID: #{{ entry.id }}</span>
+                            </td>
+                            <td class="p-4">
+                                <span class="bg-slate-950 border border-slate-800 text-slate-300 text-xs px-2.5 py-1 rounded-md">
+                                    {{ entry.item_type }} Block
+                                </span>
+                            </td>
+                            <td class="p-4 text-right font-mono text-slate-400">
+                                ${{ "%.2f"|format(entry.net_sales_amount) }}
+                            </td>
+                            <td class="p-4 text-center text-slate-300 font-mono font-semibold">
+                                {{ entry.commission_rate }}%
+                            </td>
+                            <td class="p-4 text-right font-mono font-bold text-emerald-400">
+                                +${{ "%.2f"|format(entry.commission_payout) }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="py-16 text-center bg-slate-950/20">
+                <span class="text-2xl">💸</span>
+                <p class="text-sm text-slate-500 font-medium mt-3">No individual split commission rows discovered in database entries.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Right Layout Panel: Manual Commission Split Recording Entry Form Container -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl h-fit">
+        <h3 class="text-lg font-bold tracking-tight mb-2">Record Split Cut</h3>
+        <p class="text-xs text-slate-400 mb-6">Manually post performance items into baseline ledger tables for tracking purposes.</p>
+        
+        <form action="{{ url_for('commission.log_split_commission') }}" method="POST" class="space-y-4">
+            <div>
+                <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Target Employee ID *</label>
+                <input type="number" name="employee_id" required placeholder="1" min="1"
+                       class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2.5 text-xs text-slate-200 placeholder-slate-700 focus:outline-none focus:border-amber-500 transition font-mono">
+            </div>
+
+            <div>
+                <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Invoice Item Anchor ID *</label>
+                <input type="number" name="invoice_item_id" required placeholder="1" min="1"
+                       class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2.5 text-xs text-slate-200 placeholder-slate-700 focus:outline-none focus:border-amber-500 transition font-mono">
+            </div>
+
+            <div>
+                <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Net Sales Base Value ($) *</label>
+                <input type="number" name="net_sales_amount" required step="0.01" min="0.00" placeholder="50.00"
+                       class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2.5 text-xs text-slate-200 placeholder-slate-700 focus:outline-none focus:border-amber-500 transition font-mono">
+            </div>
+
+            <div>
+                <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Classification Type *</label>
+                <select name="item_type" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2.5 text-xs text-slate-300 focus:outline-none focus:border-amber-500 transition">
+                    <option value="Service">Service Menu Item</option>
+                    <option value="Product">Retail Product Item</option>
+                </select>
+            </div>
+
+            <button type="submit" 
+                    class="w-full bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 font-bold uppercase tracking-wider text-xs py-3 rounded-lg transition shadow-lg shadow-amber-500/10 pt-2.5 pb-2.5 mt-2">
+                Commit Commission Split
+            </button>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

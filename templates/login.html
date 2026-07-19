@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BarberOS - Secure Portal Gateway</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center font-sans p-4">
+
+    <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl">
+        <div class="text-center mb-8">
+            <div class="inline-block h-3 w-12 bg-amber-500 rounded-full mb-3"></div>
+            <h1 class="text-2xl font-bold uppercase tracking-wider">System Sign In</h1>
+            <p class="text-sm text-slate-400 mt-1">Authorized Managerial Access Only</p>
+        </div>
+
+        <!-- Flash messages specific to access check logic -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="mb-6 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-xs text-red-400 font-medium text-center">
+                    {{ messages | join(" ") }}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('auth.login') }}" method="POST" class="space-y-5">
+            <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Corporate Email</label>
+                <input type="email" name="email" required autocomplete="email" placeholder="manager@barbershop.com"
+                       class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 placeholder-slate-600 focus:outline-none focus:border-amber-500 transition">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Access Token Password</label>
+                <input type="password" name="password" required autocomplete="current-password" placeholder="••••••••"
+                       class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 placeholder-slate-600 focus:outline-none focus:border-amber-500 transition">
+            </div>
+
+            <button type="submit" 
+                    class="w-full bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 font-bold uppercase tracking-wider text-sm py-3.5 rounded-xl transition shadow-lg shadow-amber-500/10 mt-2">
+                Unlock Workspace Portal
+            </button>
+        </form>
+    </div>
+
+</body>
+</html>

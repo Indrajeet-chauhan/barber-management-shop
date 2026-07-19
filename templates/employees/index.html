@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Staff Roster | BarberOS{% endblock %}
+
+{% block content %}
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+    <div>
+        <h2 class="text-2xl font-bold tracking-tight">Staff Roster Management</h2>
+        <p class="text-sm text-slate-400 mt-1">Audit active barber directories, contractual baseline parameters, and performance targets.</p>
+    </div>
+    <a href="{{ url_for('employee.add') }}" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold uppercase tracking-wider text-xs px-4 py-3 rounded-xl transition shadow-lg shadow-amber-500/10 shrink-0 text-center">
+        + Onboard New Staff
+    </a>
+</div>
+
+<div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+    {% if employees %}
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-slate-800 bg-slate-950/40 text-slate-400 text-xs font-bold uppercase tracking-wider">
+                    <th class="p-4 font-semibold">Staff Member</th>
+                    <th class="p-4 font-semibold">Contact Details</th>
+                    <th class="p-4 font-semibold">Role Designation</th>
+                    <th class="p-4 font-semibold">Base Salary</th>
+                    <th class="p-4 font-semibold text-center">Commission Split</th>
+                    <th class="p-4 font-semibold text-center">System Status</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 text-sm">
+                {% for emp in employees %}
+                <tr class="hover:bg-slate-800/20 transition duration-150">
+                    <td class="p-4 font-medium text-slate-200">
+                        <div class="font-bold text-slate-150">{{ emp.name }}</div>
+                        <span class="text-xs text-slate-500 font-mono">ID: #00{{ emp.id }}</span>
+                    </td>
+                    <td class="p-4 text-slate-400 font-medium">
+                        <div class="font-mono text-xs text-slate-300">{{ emp.phone }}</div>
+                        <div class="text-xs text-slate-500">{{ emp.email or 'No email registered' }}</div>
+                    </td>
+                    <td class="p-4">
+                        <span class="bg-slate-950 border border-slate-800 text-slate-300 text-xs font-semibold px-2.5 py-1 rounded-md tracking-wide uppercase">
+                            {{ emp.role }}
+                        </span>
+                    </td>
+                    <td class="p-4 text-slate-300 font-semibold">${{ "%.2f"|format(emp.salary) }}</td>
+                    <td class="p-4 text-center text-amber-500 font-mono font-bold">{{ emp.commission_rate }}%</td>
+                    <td class="p-4 text-center">
+                        <span class="inline-block text-xs font-bold uppercase px-2.5 py-1 rounded-full border {% if emp.status %}bg-emerald-500/10 text-emerald-400 border-emerald-500/20{% else %}bg-red-500/10 text-red-400 border-red-500/20{% endif %}">
+                            {% if emp.status %}Active{% else %}Inactive{% endif %}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="py-16 text-center bg-slate-950/20">
+        <span class="text-2xl">💈</span>
+        <p class="text-sm text-slate-500 font-medium mt-3">No active technician profile indexes discovered inside roster databases.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

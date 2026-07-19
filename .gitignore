@@ -1,0 +1,16 @@
+# Ignore local virtual environments
+venv/
+.venv/
+env/
+
+# Ignore compiled Python files
+__pycache__/
+*.pyc
+
+# Ignore local databases (so your live database stays empty/fresh)
+instance/
+*.db
+database/
+
+# Ignore environment secret configurations
+.env

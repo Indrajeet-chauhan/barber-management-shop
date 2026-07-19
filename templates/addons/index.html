@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block title %}Service Upgrades Menu | BarberOS{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <!-- Left Layout Panel: Dynamic Add-on Options Grid View (Spans 2 Columns) -->
+    <div class="lg:col-span-2 space-y-6">
+        <div>
+            <h2 class="text-2xl font-bold tracking-tight">Service Customizations & Treatment Add-ons</h2>
+            <p class="text-sm text-slate-400 mt-1">Manage premium service upgrades, pricing variables, and additional chair times.</p>
+        </div>
+
+        {% if addons %}
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-800 bg-slate-950/40 text-slate-400 text-xs font-bold uppercase tracking-wider">
+                            <th class="p-4 font-semibold">Treatment Option Name</th>
+                            <th class="p-4 font-semibold text-center">Extra Chair Time</th>
+                            <th class="p-4 font-semibold text-right">Premium Cost Upcharge</th>
+                            <th class="p-4 font-semibold text-center">Catalog Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/60 text-sm">
+                        {% for item in addons %}
+                        <tr class="hover:bg-slate-800/20 transition duration-150">
+                            <td class="p-4">
+                                <div class="font-bold text-slate-100">{{ item.name }}</div>
+                                <span class="text-[10px] text-slate-500 font-mono">SKU-ADD-00{{ item.id }}</span>
+                            </td>
+                            <td class="p-4 text-center">
+                                <span class="bg-slate-950 border border-slate-800 text-amber-500 text-xs font-mono font-semibold px-2.5 py-1 rounded-md">
+                                    +{{ item.extra_duration }} minutes
+                                </span>
+                            </td>
+                            <td class="p-4 text-right font-mono font-bold text-emerald-400">
+                                +${{ "%.2f"|format(item.price) }}
+                            </td>
+                            <td class="p-4 text-center">
+                                <span class="inline-block text-[10px] font-bold uppercase px-2 py-0.5 rounded border {% if item.status %}bg-emerald-500/10 text-emerald-400 border-emerald-500/20{% else %}bg-slate-800 text-slate-500 border-slate-700{% endif %}">
+                                    {% if item.status %}Active Upgrades{% else %}Suspended{% endif %}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <div class="py-16 text-center border border-dashed border-slate-800 bg-slate-950/20 rounded-2xl">
+            <span class="text-3xl">💆‍♂️</span>
+            <p class="text-sm text-slate-500 font-medium mt-3">No customization options or upgrade rows cataloged in menus.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Right Layout Panel: Treatment Cataloging Creation Workspace Form -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl h-fit">
+        <h3 class="text-lg font-bold tracking-tight mb-2">Catalog Upgrades Option</h3>
+        <p class="text-xs text-slate-400 mb-6">Onboard modular treatment items to embed down inside primary booking flows.</p>
+        
+        <form action="{{ url_for('addon.add_addon') }}" method="POST" class="space-y-4">
+            <div>
+                <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Treatment Variant Name *</label>
+                <input type="text" name="name" required placeholder="Premium Lavender Hot Towel Wash"
+                       class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2.5 text-xs text-slate-200 placeholder-slate-700 focus:outline-none focus:border-amber-500 transition">
+            </div>
+
+            <div>
+                <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Additional Chair Runtime (Minutes) *</label>
+                <input type="number" name="extra_duration" required value="10" min="0" placeholder="10"
+                       class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2.5 text-xs text-slate-200 placeholder-slate-700 focus:outline-none focus:border-amber-500 transition font-mono">
+            </div>
+
+            <div>
+                <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Premium Cost Upcharge ($) *</label>
+                <input type="number" name="price" required step="0.01" min="0.00" placeholder="15.00"
+                       class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2.5 text-xs text-slate-200 placeholder-slate-700 focus:outline-none focus:border-amber-500 transition font-mono">
+            </div>
+
+            <button type="submit" 
+                    class="w-full bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 font-bold uppercase tracking-wider text-xs py-3 rounded-lg transition shadow-lg shadow-amber-500/10 pt-2.5 pb-2.5 mt-2">
+                Commit Upgrade Option
+            </button>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

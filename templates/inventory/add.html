@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block title %}Catalog Product | BarberOS{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="mb-8">
+        <a href="{{ url_for('inventory.index') }}" class="text-xs font-semibold text-slate-400 hover:text-amber-500 transition">
+            ← Back to Inventory Registry
+        </a>
+        <h2 class="text-2xl font-bold tracking-tight mt-3">Catalog Retail Product Item</h2>
+        <p class="text-sm text-slate-400 mt-1">Insert fresh SKU details, hardware alignment tags, and pricing parameters.</p>
+    </div>
+
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl">
+        <form action="{{ url_for('inventory.add') }}" method="POST" class="space-y-6">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Product Name *</label>
+                    <input type="text" name="name" required placeholder="Premium Styling Wax Blend"
+                           class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 placeholder-slate-700 focus:outline-none focus:border-amber-500 transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Inventory Category *</label>
+                    <select name="category" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-300 focus:outline-none focus:border-amber-500 transition">
+                        <option value="Retail">Retail Styling Products</option>
+                        <option value="Apparel">Merchandise & Apparel</option>
+                        <option value="Tools">Hardware, Razors & Clippers</option>
+                        <option value="Backbar">Backbar Internal Salon Supply</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Universal Barcode Code String (12-Digits EAN Core)</label>
+                <input type="text" name="barcode_code" max-length="12" placeholder="123456789012"
+                       class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 placeholder-slate-700 focus:outline-none focus:border-amber-500 transition font-mono">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Wholesale Purchase Price ($) *</label>
+                    <input type="number" name="purchase_price" required step="0.01" min="0" placeholder="8.50"
+                           class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 placeholder-slate-700 focus:outline-none focus:border-amber-500 transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Retail Selling Price ($) *</label>
+                    <input type="number" name="selling_price" required step="0.01" min="0" placeholder="22.00"
+                           class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 placeholder-slate-700 focus:outline-none focus:border-amber-500 transition">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Initial Warehouse Stock (Units) *</label>
+                    <input type="number" name="stock" required min="0" placeholder="25"
+                           class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 placeholder-slate-700 focus:outline-none focus:border-amber-500 transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Minimum Safety Threshold (Alert Line) *</label>
+                    <input type="number" name="min_stock" required min="1" placeholder="5"
+                           class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 placeholder-slate-700 focus:outline-none focus:border-amber-500 transition">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Supplier Corporate Distribution Name</label>
+                <input type="text" name="supplier" placeholder="Global Salon Supplies Ltd"
+                       class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 placeholder-slate-700 focus:outline-none focus:border-amber-500 transition">
+            </div>
+
+            <div class="pt-4 border-t border-slate-800 flex justify-end gap-4">
+                <a href="{{ url_for('inventory.index') }}" class="bg-slate-950 border border-slate-800 text-slate-400 hover:text-slate-200 px-5 py-3 rounded-xl text-sm font-semibold transition">
+                    Discard Matrix Options
+                </a>
+                <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold uppercase tracking-wider text-sm px-6 py-3 rounded-xl transition shadow-lg shadow-amber-500/10">
+                    Commit Supply Index
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
