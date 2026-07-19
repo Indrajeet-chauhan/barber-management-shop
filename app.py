@@ -107,6 +107,7 @@ def create_app():
     @app.route('/setup-admin-live-account')
     def setup_admin_live():
         from models.user import User
+        db.create_all()
         existing_admin = User.query.filter_by(email="admin@barber.com").first()
         if not existing_admin:
             admin = User(name="Master Admin", email="admin@barber.com", role="Admin")
