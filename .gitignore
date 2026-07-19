@@ -10,7 +10,7 @@ __pycache__/
 # Ignore local databases (so your live database stays empty/fresh)
 instance/
 *.db
-database/
+
 
 # Ignore environment secret configurations
 .env
