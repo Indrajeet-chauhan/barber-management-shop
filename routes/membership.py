@@ -36,9 +36,8 @@ def index():
     tiers = MembershipTier.query.filter_by(status=True).all()
     subscriptions = CustomerMembership.query.all()
     
-    # Agar aapka folder 'memberships' naam se hai to ye perfect chalega.
-    # Agar error aaye to bas niche wale line me se 's' hata dena (membership/index.html).
-    return render_template('memberships/index.html', tiers=tiers, subscriptions=subscriptions)
+    # Path ko badal kar 'membership/index.html' kar diya hai taaki singular folder read ho sake
+    return render_template('membership/index.html', tiers=tiers, subscriptions=subscriptions)
 
 
 @membership_bp.route('/memberships/tier/add', methods=['POST'])
