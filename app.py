@@ -104,11 +104,15 @@ def create_app():
     # ... your existing configurations, db.init_app, etc. ...
 
     # 👇 PASTE THE TEMPORARY ROUTE HERE (INSIDE THE FUNCTION) 👇
+    
     @app.route('/setup-admin-live-account')
     def setup_admin_live():
+        # 👇 ADD THIS LINE HERE FIRST 👇
         from models.user import User
+        
         db.create_all()
         existing_admin = User.query.filter_by(email="admin@barber.com").first()
+        # ... the rest of your admin account creation logic ...
         if not existing_admin:
             admin = User(name="Master Admin", email="admin@barber.com", role="Admin")
             admin.set_password("admin123")
