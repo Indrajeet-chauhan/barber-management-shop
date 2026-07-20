@@ -1,4 +1,3 @@
-# routes/customer.py
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required
 from database import db
@@ -35,6 +34,13 @@ def add():
             flash('A customer with this phone number already exists.', 'danger')
             return redirect(url_for('customer.add'))
 
+        # Validate unique email address constraint (Only if email is provided)
+        if email:
+            existing_customer = Customer.query.filter_by(email=email).first()
+            if existing_customer:
+                flash('A customer with this email address already exists.', 'danger')
+                return redirect(url_for('customer.add'))
+
         new_customer = Customer(
             name=name, phone=phone, email=email, 
             address=address, birthday=birthday, notes=notes
@@ -54,9 +60,23 @@ def edit(id):
     customer = Customer.query.get_or_404(id)
     
     if request.method == 'POST':
-        customer.name = request.form.get('name', '').strip()
-        customer.phone = request.form.get('phone', '').strip()
-        customer.email = request.form.get('email', '').strip() or None
+        name = request.form.get('name', '').strip()
+        phone = request.form.get('phone', '').strip()
+        email = request.form.get('email', '').strip() or None
+        
+        # Check validation constraints on edit (excluding this current customer profile)
+        if Customer.query.filter(Customer.phone == phone, Customer.id != id).first():
+            flash('Another customer with this phone number already exists.', 'danger')
+            return redirect(url_for('customer.edit', id=id))
+            
+        if email:
+            if Customer.query.filter(Customer.email == email, Customer.id != id).first():
+                flash('Another customer with this email address already exists.', 'danger')
+                return redirect(url_for('customer.edit', id=id))
+
+        customer.name = name
+        customer.phone = phone
+        customer.email = email
         customer.address = request.form.get('address', '').strip() or None
         customer.notes = request.form.get('notes', '').strip() or None
         
