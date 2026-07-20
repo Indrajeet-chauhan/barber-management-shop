@@ -1,4 +1,3 @@
-# app.py
 import os
 from flask import Flask, render_template, redirect, url_for
 from flask_login import LoginManager
@@ -33,7 +32,6 @@ def create_app(config_class=Config):
             'customers/add.html': 'Add Customer Form',
             'employees/index.html': 'Employees List',
             'employees/add.html': 'Add Employee Form',
-            # Updated below to capture flash messages on the redirected appointment index view
             'appointments/index.html': 'Appointments List {% with messages = get_flashed_messages() %}{% if messages %}{{ messages|join(" ") }}{% endif %}{% endwith %}',
             'appointments/book.html': 'Scheduling Conflict Mock Pass Content',
             'services/index.html': 'Services List',
@@ -96,23 +94,12 @@ def create_app(config_class=Config):
     def home():
         return redirect(url_for('dashboard.index'))
 
-    return app
-
-
-def create_app():
-    app = Flask(__name__)
-    # ... your existing configurations, db.init_app, etc. ...
-
-    # 👇 PASTE THE TEMPORARY ROUTE HERE (INSIDE THE FUNCTION) 👇
-    
+    # Temporary setup route inside the one true application factory
     @app.route('/setup-admin-live-account')
     def setup_admin_live():
-        # 👇 ADD THIS LINE HERE FIRST 👇
         from models.user import User
-        
         db.create_all()
         existing_admin = User.query.filter_by(email="admin@barber.com").first()
-        # ... the rest of your admin account creation logic ...
         if not existing_admin:
             admin = User(name="Master Admin", email="admin@barber.com", role="Admin")
             admin.set_password("admin123")
@@ -121,10 +108,11 @@ def create_app():
             return "Live Production Admin Account Created Successfully!"
         return "Admin account already exists."
 
-    return app  # This is the existing return line at the bottom of the function
+    return app
 
 if __name__ == '__main__':
     application = create_app()
     with application.app_context():
+        from models.user import User
         db.create_all()
     application.run(debug=True)
