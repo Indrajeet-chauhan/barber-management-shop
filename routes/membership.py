@@ -7,7 +7,8 @@ from models.customer import Customer
 from datetime import datetime, timedelta, timezone
 from services.qrcode_service import QRCodeService
 
-membership_bp = Blueprint('membership', __name__)
+# Yahan hum explicit template_folder define kar rahe hain taaki Flask seedhe sahi folder uthaye
+membership_bp = Blueprint('membership', __name__, template_folder='../templates')
 
 @membership_bp.route('/memberships/generate-qr/<int:id>', methods=['POST'])
 @login_required
@@ -36,7 +37,7 @@ def index():
     tiers = MembershipTier.query.filter_by(status=True).all()
     subscriptions = CustomerMembership.query.all()
     
-    # Path ko badal kar 'membership/index.html' kar diya hai taaki singular folder read ho sake
+    # Path ko explicit memberships/index.html par point karenge
     return render_template('memberships/index.html', tiers=tiers, subscriptions=subscriptions)
 
 
