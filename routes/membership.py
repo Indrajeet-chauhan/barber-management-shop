@@ -36,7 +36,7 @@ def index():
     """List out membership tiers and customer subscription registers."""
     tiers = MembershipTier.query.filter_by(status=True).all()
     subscriptions = CustomerMembership.query.all()
-    return render_template('membership/index.html', tiers=tiers, subscriptions=subscriptions)
+    return render_template('memberships/index.html', tiers=tiers, subscriptions=subscriptions)
 
 @membership_bp.route('/memberships/tier/add', methods=['POST'])
 @login_required
