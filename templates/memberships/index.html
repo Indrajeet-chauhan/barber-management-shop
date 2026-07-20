@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6 text-white">Membership Operations Center</h1>
+    
+    <!-- Program Tiers Management -->
+    <div class="bg-slate-800 p-6 rounded-lg mb-8 shadow-md">
+        <h2 class="text-xl font-semibold mb-4 text-orange-400">Active Membership Tiers</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {% for tier in tiers %}
+            <div class="border border-slate-700 p-4 rounded bg-slate-900">
+                <h3 class="text-lg font-bold text-white">{{ tier.name }}</h3>
+                <p class="text-gray-400">Monthly Fee: ${{ tier.monthly_fee }}</p>
+                <p class="text-green-400">Discount: {{ tier.discount_percentage }}%</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Active Subscriptions -->
+    <div class="bg-slate-800 p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold mb-4 text-orange-400">Subscriber Roster</h2>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-slate-700">
+                <thead>
+                    <tr class="text-left text-gray-400">
+                        <th class="pb-3">Customer ID</th>
+                        <th class="pb-3">Tier ID</th>
+                        <th class="pb-3">Renewal Date</th>
+                        <th class="pb-3">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="text-white divide-y divide-slate-700">
+                    {% for sub in subscriptions %}
+                    <tr>
+                        <td class="py-3">{{ sub.customer_id }}</td>
+                        <td class="py-3">{{ sub.tier_id }}</td>
+                        <td class="py-3">{{ sub.next_renewal }}</td>
+                        <td class="py-3">
+                            <span class="px-2 py-1 rounded text-xs bg-green-900 text-green-300">{{ sub.status }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

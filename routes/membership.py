@@ -37,7 +37,7 @@ def index():
     subscriptions = CustomerMembership.query.all()
     
     # Path ko badal kar 'membership/index.html' kar diya hai taaki singular folder read ho sake
-    return render_template('membership/index.html', tiers=tiers, subscriptions=subscriptions)
+    return render_template('memberships/index.html', tiers=tiers, subscriptions=subscriptions)
 
 
 @membership_bp.route('/memberships/tier/add', methods=['POST'])
