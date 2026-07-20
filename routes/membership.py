@@ -1,6 +1,5 @@
-# routes/membership.py
 import os
-from flask import Blueprint, render_template, redirect, url_for, flash, request,current_app
+from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
 from flask_login import login_required
 from database import db
 from models.membership import MembershipTier, CustomerMembership
@@ -36,12 +35,16 @@ def index():
     """List out membership tiers and customer subscription registers."""
     tiers = MembershipTier.query.filter_by(status=True).all()
     subscriptions = CustomerMembership.query.all()
+    
+    # Agar aapka folder 'memberships' naam se hai to ye perfect chalega.
+    # Agar error aaye to bas niche wale line me se 's' hata dena (membership/index.html).
     return render_template('memberships/index.html', tiers=tiers, subscriptions=subscriptions)
+
 
 @membership_bp.route('/memberships/tier/add', methods=['POST'])
 @login_required
 def add_tier():
-    """Create a brand new structural membership program tier tier variant."""
+    """Create a brand new structural membership program tier variant."""
     name = request.form.get('name', '').strip()
     fee = float(request.form.get('monthly_fee', 0.0))
     discount = float(request.form.get('discount_percentage', 0.0))
@@ -57,6 +60,7 @@ def add_tier():
 
     flash(f'Membership program "{name}" cataloged successfully.', 'success')
     return redirect(url_for('membership.index'))
+
 
 @membership_bp.route('/memberships/subscribe', methods=['POST'])
 @login_required
