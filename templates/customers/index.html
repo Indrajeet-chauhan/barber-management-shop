@@ -31,7 +31,7 @@
                     <td class="p-4 text-slate-400 font-mono text-xs">{{ cust.phone }}</td>
                     <td class="p-4 text-slate-400">{{ cust.email or 'N/A' }}</td>
                     <td class="p-4 text-center">
-                        <form action="{{ url_for('membership.subscribe') }}" method="POST" class="inline-block">
+                        <form action="{{ url_for('membership.subscribe_customer') }}" method="POST" class="inline-block">
                             <input type="hidden" name="customer_id" value="{{ cust.id }}">
                             <input type="hidden" name="tier_id" value="1">
                             <button type="submit" class="text-xs bg-slate-950 border border-slate-800 hover:border-amber-500/40 text-slate-300 hover:text-amber-500 px-2.5 py-1.5 rounded-lg transition">
